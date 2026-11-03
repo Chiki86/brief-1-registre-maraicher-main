@@ -75,5 +75,10 @@ return{
 // Ajoute la saisie au registre si elle est valide (verifierOperation, puis creerOperation).
 // Renvoie les erreurs : [] si l'opération a été ajoutée ; sinon les messages, et rien n'est ajouté.
 export function ajouterOperation(operations, saisie) {
-  throw new Error('TODO : coder ajouterOperation dans src/registre.js');
+ const erreur = verifierOperation(saisie,operations)
+ if(erreur.length>0){
+  return erreur
+ }
+ operations.push(creerOperation(saisie))
+ return []
 }
