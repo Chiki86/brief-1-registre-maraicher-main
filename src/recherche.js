@@ -13,7 +13,7 @@ return tab
 
 // Renvoie un NOUVEAU tableau avec les opérations de cette culture (éventuellement vide).
 export function filtrerParCulture(operations, culture) {
-  throw new Error('TODO : coder filtrerParCulture dans src/recherche.js');
+ return operations.filter((ops)=>ops.culture === culture)
 }
 
 // Renvoie une COPIE triée par coût croissant, avec un comparateur numérique.
