@@ -14,7 +14,10 @@ export function formaterOperation(operation) {
 // Renvoie un texte avec une opération par ligne (lignes séparées par '\n'),
 // ou 'Aucune opération enregistrée.' si la liste est vide.
 export function listerOperations(operations) {
-  throw new Error('TODO : coder listerOperations dans src/registre.js');
+  if(operations.length === 0){
+    return 'Aucune opération enregistrée.'
+  }
+  return operations.map(formaterOperation).join('\n');
 }
 
 // Renvoie l'opération qui a cet identifiant, ou undefined si elle n'existe pas.
