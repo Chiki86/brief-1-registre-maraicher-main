@@ -8,7 +8,7 @@ export const OPERATIONS = ['semis', 'arrosage', 'désherbage', 'repiquage', 'ré
 // Renvoie une ligne de texte qui décrit l'opération.
 // Exemple : 'O03 | 2026-10-21 | P1 | tomate | arrosage | 2000 FCFA'
 export function formaterOperation(operation) {
-  throw new Error('TODO : coder formaterOperation dans src/registre.js');
+  return `${operation.id} | ${operation.date} | ${operation.parcelle} | ${operation.culture} | ${operation.operation} | ${operation.coutFCFA} FCFA`;
 }
 
 // Renvoie un texte avec une opération par ligne (lignes séparées par '\n'),
