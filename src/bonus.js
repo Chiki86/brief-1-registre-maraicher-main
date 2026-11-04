@@ -59,5 +59,26 @@ export function trierParCoutDecroissant(operations) {
 // Renvoie la parcelle dont le total des coûts est le plus élevé : { parcelle, total },
 // ou null si le registre est vide. En cas d'égalité : la première parcelle rencontrée.
 export function parcelleLaPlusCouteuse(operations) {
-  throw new Error('TODO Bonus : coder parcelleLaPlusCouteuse dans src/bonus.js');
+  if(operations.length === 0){
+    return null
+  }
+  let coutEleve = {}
+  for(const opers of operations){
+    if(coutEleve[opers.parcelle]=== undefined){
+      coutEleve[opers.parcelle] = 0
+    }
+    coutEleve[opers.parcelle] += opers.coutFCFA
+  }
+  let parcelleMax = null
+  let tMax = -1
+  for(const parcelle in coutEleve){
+    if(coutEleve[parcelle]>tMax){
+      tMax = coutEleve[parcelle]
+      parcelleMax = parcelle
+    }
+  }
+  return{
+    parcelle : parcelleMax,
+    total : tMax
+  }
 }
