@@ -69,11 +69,12 @@ export function parcelleLaPlusCouteuse(operations) {
     }
     coutEleve[opers.parcelle] += opers.coutFCFA
   }
+  const synthese = syntheseParParcelle(operations);
   let parcelleMax = null
   let tMax = -1
-  for(const parcelle in coutEleve){
-    if(coutEleve[parcelle]>tMax){
-      tMax = coutEleve[parcelle]
+  for(const parcelle in synthese){
+    if(synthese[parcelle].total>tMax){
+      tMax = synthese[parcelle].total
       parcelleMax = parcelle
     }
   }
