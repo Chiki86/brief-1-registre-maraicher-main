@@ -7,7 +7,7 @@ import { chargerJson, enregistrerJson } from './src/stockage.js';
 import { OPERATIONS, ajouterOperation, formaterOperation, listerOperations, trouverParId } from './src/registre.js';
 import { filtrerParCulture, filtrerParParcelle, trierParCout, trierParDate } from './src/recherche.js';
 import { coutMinMax, syntheseParParcelle, totalCouts } from './src/synthese.js';
-
+import { supprimerOperation,modifierOperation,CHAMPS_MODIFIABLES,trierParCoutDecroissant,parcelleLaPlusCouteuse } from './src/bonus.js'
 const FICHIER_DONNEES = 'donnees/operations.json';
 function afficherAccueil() {
   console.log('='.repeat(50));
@@ -22,6 +22,8 @@ function afficherMenu() {
   console.log('3. Rechercher (identifiant, parcelle, culture)');
   console.log('4. Trier (coût, date)');
   console.log('5. Synthèse des dépenses');
+  console.log('6. Supprimer une opération');
+  console.log('7. Modifier une opération');
   console.log('0. Quitter');
 }
 async function chargerRegistre() {
@@ -120,7 +122,8 @@ async function trier(operations) {
   console.log('\n--- Trier les opérations ---');
   console.log('1. Par coût (croissant)');
   console.log('2. Par date (de la plus ancienne à la plus récente)');
-  const critere = await demander('Votre choix : ');
+  console.log('3. Par coût (décroissant)')
+  const critere = await demander('\n Votre choix : ');
   if (critere === null) return;
 
   let resultat;
@@ -131,8 +134,11 @@ async function trier(operations) {
     case '2':
       resultat = trierParDate(operations);
       break;
+    case '3':
+      resultat = trierParCoutDecroissant(operations)
+      break;
     default:
-      console.log(`Choix inconnu : « ${critere} ». Tapez 1 ou 2.`);
+      console.log(`Choix inconnu : « ${critere} ». Tapez 1 ou 2 ou 3.`);
       return;
   }
 
@@ -160,11 +166,64 @@ function synthese(operations) {
     const { nombre, total } = parParcelle[parcelle];
     console.log(`  ${parcelle} : ${nombre} opération(s), ${total} FCFA`);
   }
+  const cherte = parcelleLaPlusCouteuse(operations);
+  console.log(`Parcelle la plus coûteuse : ${cherte.parcelle} (${cherte.total} FCFA)`);
+}
+
+
+
+async function supprimer(operations) {
+  console.log('\n--- Supprimer une opération ---');
+  const id = await demander('Identifiant à supprimer (ex. O03) : ');
+  if (id === null) return;
+
+  const supprimee = supprimerOperation(operations, id.toUpperCase());
+  if (supprimee === undefined) {
+    console.log(`Identifiant introuvable : ${id.toUpperCase()}. Rien n'a été supprimé.`);
+    return;
+  }
+  await enregistrerJson(FICHIER_DONNEES, operations);
+  console.log(`Opération supprimée : ${formaterOperation(supprimee)}`);
+  console.log(`Le registre compte ${operations.length} opération(s).`);
+}
+
+async function modifier(operations) {
+  console.log('\n--- Modifier une opération ---');
+  const id = await demander('Identifiant à modifier (ex. O03) : ');
+  if (id === null) return;
+  const identifiant = id.toUpperCase();
+
+  const operation = trouverParId(operations, identifiant);
+  if (operation === undefined) {
+    console.log(`Identifiant introuvable : ${identifiant}.`);
+    return;
+  }
+  console.log(formaterOperation(operation));
+
+  const champ = await demander(`Champ à modifier (${CHAMPS_MODIFIABLES.join(', ')}) : `);
+  if (champ === null) return;
+  const valeur = await demander('Nouvelle valeur : ');
+  if (valeur === null) return;
+
+  let valeurNormalisee = valeur;
+  if (champ === 'parcelle') valeurNormalisee = valeur.toUpperCase();
+  if (champ === 'culture' || champ === 'operation') valeurNormalisee = valeur.toLowerCase();
+
+  const erreurs = modifierOperation(operations, identifiant, champ, valeurNormalisee);
+  if (erreurs.length === 0) {
+    await enregistrerJson(FICHIER_DONNEES, operations);
+    console.log(`Opération modifiée : ${formaterOperation(trouverParId(operations, identifiant))}`);
+  } else {
+    console.log('Modification refusée :');
+    for (const message of erreurs) {
+      console.log(`  - ${message}`);
+    }
+  }
 }
 
 async function main() {
   ouvrirSaisie();
-   try {
+  try {
     afficherAccueil();
     const operations = await chargerRegistre();
 
@@ -190,6 +249,12 @@ async function main() {
             break;
           case '5':
             synthese(operations);
+            break;
+          case '6':
+            await supprimer(operations);
+            break;
+          case '7':
+            await modifier(operations);
             break;
           case '0':
             console.log('Au revoir !');
