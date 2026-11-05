@@ -4,6 +4,6 @@
 
 | Ce que je cherchais | Où | Ce que j'ai compris | Utilisé dans |
 | --- | --- | --- | --- |
-| ✏️ | | | |
-| ✏️ | | | |
-| ✏️ | | | |
+| JSON  | https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON | Que la difference entre JSON et Objet est que les propriétés dans le JSON sont de types texte contrairement aux objets où c'est que les valeurs sont des textes|`stockage.js`|
+|  | | | |
+| | | | |

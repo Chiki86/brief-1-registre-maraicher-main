@@ -78,5 +78,29 @@
     "culture": "aubergine",
     "operation": "désherbage",
     "coutFCFA": 6000
+  },
+  {
+    "id": "A01",
+    "date": "2026-12-09",
+    "parcelle": "P2",
+    "culture": "soja",
+    "operation": "repiquage",
+    "coutFCFA": 2345
+  },
+  {
+    "id": "CH01",
+    "date": "2002-02-22",
+    "parcelle": "C1",
+    "culture": "banane",
+    "operation": "arrosage",
+    "coutFCFA": 5000
+  },
+  {
+    "id": "CH05",
+    "date": "2026-11-05",
+    "parcelle": "P75",
+    "culture": "mil",
+    "operation": "arrosage",
+    "coutFCFA": 2850
   }
 ]
